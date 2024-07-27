@@ -12,7 +12,7 @@ Gobblet Gobblers requires:
 You can check the latest sources with the command:
 
 ```
-git clone https://github.com/SagiriHAK/Gobblet_Gobblers.git
+git clone https://github.com/5alieri/Gobblet_Gobblers.git
 ```
 
 ## News
