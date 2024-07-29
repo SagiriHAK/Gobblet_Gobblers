@@ -49,7 +49,7 @@ def is_win(state):
 #     board_list = state.get_board_list()
 #     _, _, dist, size = operator.get_all_param()
 
-#     idx = np.searchsorted(boarders, abs(board_list[dist]), side="left") 
+#     idx = np.searchsorted(boarders, abs(board_list[dist]), side="left")
 #     if idx == 0:
 #         return True
 #     maximum_piece = 3**idx
@@ -64,7 +64,7 @@ def can_put(state, operator):
     board_list = state.get_board_list()
     _, _, dist, size = operator.get_all_param()
 
-    idx = np.searchsorted(boarders, abs(board_list[dist]), side="left") 
+    idx = np.searchsorted(boarders, abs(board_list[dist]), side="left")
     maximum_piece = 3**idx
 
     if maximum_piece <= size:
@@ -264,24 +264,6 @@ def make_tree(state, operator, max_depth=4):
         close_list.append(node)
     return close_list
 
-# def main():
-#     state = State()
-#     state.set_board_list([0,0,0,0,0,0,0,0,0])
-#     view_state(state)
-
-#     operator = Operator(-1, -1, 3, 9)
-#     state = move(state, operator)
-#     view_state(state)
-
-#     tree = make_tree(state, Operator(-1, -1, 3, 9))
-#     calc_child_eval(tree)
-#     best = min_max_algorithm(tree)
-#     state = move(state, best)
-#     # print(state.get_board_list())
-#     # print(best.get_all_param())
-#     view_state(state)
-
-
 # main loop
 def main():
     state = State()
@@ -290,7 +272,7 @@ def main():
     view_state(state)
     while True:
         source, dist, size = map(int, input("plase input operator:").split())
-        
+
         operator = Operator(-1, source, dist, size)
         state = move(state, operator)
         # print(state.get_board_list())
