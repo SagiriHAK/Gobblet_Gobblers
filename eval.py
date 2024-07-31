@@ -71,7 +71,6 @@ def eval(node):
 
   # 勝利に基づく評価ポイント
   if node.win in [-1, 1]:
-    win_eval = win_eval_x
+    win_eval = win_eval_x*node.win
 
-  print(size_eval, reach_eval, move_available, kado_eval, center_eval, win_eval, bougai_eval)
   return size_eval + reach_eval + move_available + kado_eval + center_eval + win_eval + bougai_eval
