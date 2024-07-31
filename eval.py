@@ -45,6 +45,8 @@ def eval(node):
   for x, piece in enumerate(board_list):
       if piece > 0:
         move_available += move_available_x
+        if x in [1,3,5,7]:
+          kado_eval += 1
       elif piece < 0:
         move_available -= move_available_x
 
