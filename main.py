@@ -6,7 +6,6 @@ from Operator import Operator
 from Node import Node
 from eval import eval
 from View import view_state
-from pprint import pprint
 
 def _check_win(check):
     for i, elem1 in enumerate(check):
@@ -44,21 +43,6 @@ def is_win(state):
     else:
         return False
 
-# def can_put(state, operator):
-#     boarders = [1,4]
-#     board_list = state.get_board_list()
-#     _, _, dist, size = operator.get_all_param()
-
-#     idx = np.searchsorted(boarders, abs(board_list[dist]), side="left")
-#     if idx == 0:
-#         return True
-#     maximum_piece = 3**idx
-
-#     if maximum_piece < size:
-#         return True
-#     else:
-#         return False
-
 def can_put(state, operator):
     boarders = [1,4]
     board_list = state.get_board_list()
@@ -75,9 +59,8 @@ def can_put(state, operator):
 def put(state, operator):
     """put a piece"""
     board_list =state.get_board_list()
-    turn, source, dist, size = operator.get_all_param()
+    turn, _, dist, size = operator.get_all_param()
     if can_put(state, operator):
-        # print(turn)
         board_list[dist] += turn*size
         state.set_board_list(board_list)
         return True
@@ -86,27 +69,13 @@ def put(state, operator):
 
 def move(state:State, operator:Operator):
     pick(state, operator)
-    # if is_win(state):
-    #     state.set_win(operator.get_turn)
-    can_put = put(state, operator)
-    # if state is None:
-    #     print(state)
+    _ = put(state, operator)
     return state
-    # if (can_put == False):
-    #     print("!!!!!!!!!!!!!!!!!!")
-    # # print(operator.get_all_param())
-    # # print(state)
-    # # print(operator)
-    # # print(state.get_board_list())
-    # if can_put:
-    #     return state
-    # else:
-    #     return None
 
 # return to source and max_piece
 def check_position(state, operator):
     board_list = state.get_board_list()
-    turn, _, dist, size = operator.get_all_param()
+    turn, _, _, _ = operator.get_all_param()
     turn = -1 if turn == 1 else 1
     movable_piece = []
     boarders = [1,4]
@@ -161,11 +130,6 @@ def min_max_algorithm(tree):
                         if max_eval_dict[leaf.parent].eval < leaf.eval:
                             max_eval_dict[leaf.parent] = leaf
 
-            # print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1")
-            # pprint(max_eval_dict)
-            # if len(max_eval_dict) == 1:
-            #     for elem in max_eval_dict:
-            #         # print(max_eval_dict[elem].operator.get_all_param())
             # set child Node to parent Node
             for parent in max_eval_dict:
                 if parent is None:
@@ -226,12 +190,10 @@ def make_tree(state, operator, max_depth=4):
 
         if node_depth > max_depth:
             break
-        # if cnt >= 20:
-        #     break
         movable_piece = check_position(node.state, node.operator)
-        # cnt+=1
+
         turn = node.operator.get_turn()
-        # turn = -1 if turn == 1 else 1
+
         next_turn = 1 if turn == -1 else -1
         rest_piece = node.state.get_piece(next_turn)
         for piece in rest_piece:
@@ -259,7 +221,6 @@ def make_tree(state, operator, max_depth=4):
                     node_depth+1
                 )
             )
-            # next_turn = 1 if turn == -1 else -1
 
         close_list.append(node)
     return close_list
@@ -268,14 +229,12 @@ def make_tree(state, operator, max_depth=4):
 def main():
     state = State()
     state.set_board_list([0,0,0,0,0,0,0,0,0])
-    # print(state.get_board_list())
     view_state(state)
     while True:
         source, dist, size = map(int, input("plase input operator:").split())
 
         operator = Operator(-1, source, dist, size)
         state = move(state, operator)
-        # print(state.get_board_list())
         view_state(state)
         if is_win(state):
             print("player win!")
@@ -285,16 +244,10 @@ def main():
         calc_child_eval(tree)
         best = min_max_algorithm(tree)
         state = move(state, best)
-        # print(state.get_board_list())
         view_state(state)
         if is_win(state):
             print("cpu win!")
             break
-
-# def main():
-#     state = State()
-#     state.set_board_list([-6,-2,1,-9,3,9,0,8,0])
-#     print(is_win(state))
 
 if __name__ == "__main__":
     main()
