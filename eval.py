@@ -4,8 +4,7 @@ def eval(node):
   state = node.state
   operator = node.operator
   board_list = state.get_board_list()#現在の盤面に配置しているコマのリスト
-  boarders = [1,4]
-  _, source, dist, size = operator.get_all_param()
+  _, _, dist, size = operator.get_all_param()
 
   eval = 0
   ## コマの大きさ
@@ -45,6 +44,8 @@ def eval(node):
   for x, piece in enumerate(board_list):
       if piece > 0:
         move_available += move_available_x
+        if x in [1,3,5,7]:
+          kado_eval += 1
       elif piece < 0:
         move_available -= move_available_x
 

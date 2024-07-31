@@ -20,9 +20,23 @@ git clone https://github.com/5alieri/Gobblet_Gobblers.git
 - `2024/07/31` 🔥 We update Gobblet Gobblers ver.1.0
 
 ## board
-|7|0|5|
-|2|4|6|
-|3|8|1|
+ <table>
+    <tr>
+      <td>7</td>
+      <td>0</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>4</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>8</td>
+      <td>1</td>
+    </tr>
+ </table>
 
 ## Piece size
 - small      1

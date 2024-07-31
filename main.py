@@ -126,7 +126,6 @@ def enable_hand(state, movable_piece):
 
 def min_max_algorithm(tree, depth):
     # define max depth and maximize or minimize
-    # depth = 4
     is_maximizing = True
 
     #  if depth bigger than zero then continue loop
@@ -226,7 +225,7 @@ def make_tree(state, operator, max_depth=4):
             if node.win != 0:
                 _win = deepcopy(node.win)
             elif is_win(_child_state):
-                _win = next_turn
+                _win = who_win(_child_state)
 
             if _child_state is None:
                 _state = deepcopy(node.state)
@@ -262,11 +261,11 @@ def main():
         while True:
             _player_piece = state.get_player_piece()
             print(f"player S:{_player_piece[1]} M:{_player_piece[3]} L:{_player_piece[9]}")
-            
+
             source, dist, size = map(str, input("plase input operator:").split())
 
             source, dist = int(source), int(dist)
-            conv_piece = {"S":1, "M":3, "L":9}
+            conv_piece = {"S":1, "M":3, "L":9, "s":1, "m":3, "l":9}
             size = conv_piece[size]
 
             with open("statelog.txt", "a") as f:
@@ -327,14 +326,13 @@ def main():
                 else:
                     raise("Error")
 
-
             _player_piece = state.get_player_piece()
             print(f"player S:{_player_piece[1]} M:{_player_piece[3]} L:{_player_piece[9]}")
-            
+
             source, dist, size = map(str, input("plase input operator:").split())
 
             source, dist = int(source), int(dist)
-            conv_piece = {"S":1, "M":3, "L":9}
+            conv_piece = {"S":1, "M":3, "L":9, "s":1, "m":3, "l":9}
             size = conv_piece[size]
 
             with open("statelog.txt", "a") as f:
@@ -352,9 +350,6 @@ def main():
                     break
                 else:
                     raise("Error")
-
-
-            
 
 # def main():
 #     state = State()
