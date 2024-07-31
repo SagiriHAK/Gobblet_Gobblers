@@ -32,6 +32,19 @@ def pick(state, operator):
         board_list[source] -= turn * size
         state.set_board_list(board_list)
 
+def who_win(state):
+    board_list = state.get_board_list()
+    negative = [elem + 1 for elem in range(len(board_list)) if board_list[elem] < 0]
+    positive = [elem + 1 for elem in range(len(board_list)) if board_list[elem] > 0]
+    negative_win = _check_win(negative)
+    positive_win = _check_win(positive)
+    if negative_win:
+        return -1
+    elif positive_win:
+        return 1
+    else:
+        raise("No one win this game.")
+
 def is_win(state):
     """decision of victory or defeat"""
     board_list = state.get_board_list()
@@ -237,45 +250,111 @@ def main():
     state = State()
     state.set_board_list([0,0,0,0,0,0,0,0,0])
     view_state(state)
+    player_turn = int(input("player turn:"))
+    is_first = True if player_turn == -1 else False
 
     dt_now = datetime.datetime.now()
     f = open("statelog.txt", "a")
     f.write(f"\n{dt_now}\n")
     f.close()
 
-    while True:
-        _player_piece = state.get_player_piece()
-        print(f"player S:{_player_piece[1]} M:{_player_piece[3]} L:{_player_piece[9]}")
-        
-        source, dist, size = map(str, input("plase input operator:").split())
+    if is_first:
+        while True:
+            _player_piece = state.get_player_piece()
+            print(f"player S:{_player_piece[1]} M:{_player_piece[3]} L:{_player_piece[9]}")
+            
+            source, dist, size = map(str, input("plase input operator:").split())
 
-        source, dist = int(source), int(dist)
-        conv_piece = {"S":1, "M":3, "L":9}
-        size = conv_piece[size]
+            source, dist = int(source), int(dist)
+            conv_piece = {"S":1, "M":3, "L":9}
+            size = conv_piece[size]
 
-        with open("statelog.txt", "a") as f:
-            f.write(f"{source} {dist} {size}\n")
+            with open("statelog.txt", "a") as f:
+                f.write(f"{source} {dist} {size}\n")
 
-        operator = Operator(-1, source, dist, size)
-        state = move(state, operator)
-        view_state(state)
-        if is_win(state):
-            print("player win!")
-            break
+            operator = Operator(-1, source, dist, size)
+            state = move(state, operator)
+            view_state(state)
+            if is_win(state):
+                if who_win(state) == -1:
+                    print("player win!")
+                    break
+                elif who_win(state) == 1:
+                    print("cpu win!")
+                    break
+                else:
+                    raise("Error")
 
-        tree = make_tree(state, Operator(-1, source, dist, size), max_depth=depth)
-        calc_child_eval(tree, depth)
-        best = min_max_algorithm(tree, depth=depth)
+            tree = make_tree(state, Operator(-1, source, dist, size), max_depth=depth)
+            calc_child_eval(tree, depth)
+            best = min_max_algorithm(tree, depth=depth)
 
-        _, _source, _dist, _size = best.get_all_param()
-        with open("statelog.txt", "a") as f:
-            f.write(f"{_source} {_dist} {_size}\n")
+            _, _source, _dist, _size = best.get_all_param()
+            with open("statelog.txt", "a") as f:
+                f.write(f"{_source} {_dist} {_size}\n")
 
-        state = move(state, best)
-        view_state(state)
-        if is_win(state):
-            print("cpu win!")
-            break
+            state = move(state, best)
+            view_state(state)
+            if is_win(state):
+                if who_win(state) == -1:
+                    print("player win!")
+                    break
+                elif who_win(state) == 1:
+                    print("cpu win!")
+                    break
+                else:
+                    raise("Error")
+
+    else:
+        while True:
+            tree = make_tree(state, Operator(-1, None, None, None), max_depth=depth)
+            calc_child_eval(tree, depth)
+            best = min_max_algorithm(tree, depth=depth)
+
+            _, _source, _dist, _size = best.get_all_param()
+            with open("statelog.txt", "a") as f:
+                f.write(f"{_source} {_dist} {_size}\n")
+
+            state = move(state, best)
+            view_state(state)
+            if is_win(state):
+                if who_win(state) == -1:
+                    print("player win!")
+                    break
+                elif who_win(state) == 1:
+                    print("cpu win!")
+                    break
+                else:
+                    raise("Error")
+
+
+            _player_piece = state.get_player_piece()
+            print(f"player S:{_player_piece[1]} M:{_player_piece[3]} L:{_player_piece[9]}")
+            
+            source, dist, size = map(str, input("plase input operator:").split())
+
+            source, dist = int(source), int(dist)
+            conv_piece = {"S":1, "M":3, "L":9}
+            size = conv_piece[size]
+
+            with open("statelog.txt", "a") as f:
+                f.write(f"{source} {dist} {size}\n")
+
+            operator = Operator(-1, source, dist, size)
+            state = move(state, operator)
+            view_state(state)
+            if is_win(state):
+                if who_win(state) == -1:
+                    print("player win!")
+                    break
+                elif who_win(state) == 1:
+                    print("cpu win!")
+                    break
+                else:
+                    raise("Error")
+
+
+            
 
 # def main():
 #     state = State()
