@@ -171,10 +171,10 @@ def min_max_algorithm(tree, depth):
 
     return best_operator
 
-def calc_child_eval(tree):
+def calc_child_eval(tree, depth):
     """calculate"""
     for leaf in tree:
-        if leaf.depth == 4:
+        if leaf.depth == depth:
             _tmp = eval(leaf)
             leaf.set_eval(_tmp)
 
@@ -231,7 +231,7 @@ def make_tree(state, operator, max_depth=4):
 
 # main loop
 def main():
-    depth = 4 # 変えるな危険，バグのもと
+    depth = 2 # 変えるな危険，バグのもと
     state = State()
     state.set_board_list([0,0,0,0,0,0,0,0,0])
     view_state(state)
@@ -249,14 +249,13 @@ def main():
 
         operator = Operator(-1, source, dist, size)
         state = move(state, operator)
-        print(state.get_board_list())
         view_state(state)
         if is_win(state):
             print("player win!")
             break
 
         tree = make_tree(state, Operator(-1, source, dist, size), max_depth=depth)
-        calc_child_eval(tree)
+        calc_child_eval(tree, depth)
         best = min_max_algorithm(tree, depth=depth)
 
         _, _source, _dist, _size = best.get_all_param()
@@ -264,11 +263,21 @@ def main():
             f.write(f"{_source} {_dist} {_size}\n")
 
         state = move(state, best)
-        print(state.get_board_list())
         view_state(state)
         if is_win(state):
             print("cpu win!")
             break
+
+# def main():
+#     state = State()
+#     state.set_board_list([9,0,0,6,0,-9,0,-9,0])
+#     view_state(state)
+
+#     operator = Operator(-1, 1, 3, 9)
+
+#     node = Node(state, operator, None, None)
+#     print(eval(node))
+
 
 if __name__ == "__main__":
     main()
