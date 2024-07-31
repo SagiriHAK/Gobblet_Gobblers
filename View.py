@@ -30,11 +30,11 @@ def view_piece(state,x):
 
 def view_state(state):
     # board_list=state.get_board_list()
-    print("| - - - | - - - | - - - |")
+    print("| 7 - - | 0 - - | 5 - - |")
     print("|"+view_piece(state,7)+"|"+view_piece(state,0)+"|"+view_piece(state,5)+"|")
-    print("| - - - | - - - | - - - |")
+    print("| 2 - - | 4 - - | 6 - - |")
     print("|"+view_piece(state,2)+"|"+view_piece(state,4)+"|"+view_piece(state,6)+"|")
-    print("| - - - | - - - | - - - |")
+    print("| 3 - - | 8 - - | 1 - - |")
     print("|"+view_piece(state,3)+"|"+view_piece(state,8)+"|"+view_piece(state,1)+"|")
     print("| - - - | - - - | - - - |")
     print("\n")
