@@ -1,5 +1,6 @@
 import numpy as np
 from copy import deepcopy
+import datetime
 
 from State import State
 from Operator import Operator
@@ -110,9 +111,9 @@ def enable_hand(state, movable_piece):
                 cand_operator.append([elem[0], i, elem[1]])
     return cand_operator
 
-def min_max_algorithm(tree):
+def min_max_algorithm(tree, depth):
     # define max depth and maximize or minimize
-    depth = 4
+    # depth = 4
     is_maximizing = True
 
     #  if depth bigger than zero then continue loop
@@ -206,19 +207,22 @@ def make_tree(state, operator, max_depth=4):
 
             # Noneの場合(動かせない場合は)turnは変更しない
             _child_state = move(_state, Operator(next_turn,elem[0],elem[1],elem[2]))
+
+            # もし_child_stateがwinだったらNodeのwinを-1or1にする
+            _win = 0
+            if is_win(_child_state):
+                _win = next_turn
+
             if _child_state is None:
                 _state = deepcopy(node.state)
-
-            # if player or cpu win, set the parent node's reach variable to -1 or 1.
-            if _child_state.get_win() == -1 or _child_state.get_win() == 1:
-                node.state.set_reach(next_turn)
 
             open_list.append(
                 Node(
                     _child_state,
                     Operator(next_turn,elem[0],elem[1],elem[2]),
                     node,
-                    node_depth+1
+                    node_depth+1,
+                    win=_win
                 )
             )
 
@@ -227,23 +231,40 @@ def make_tree(state, operator, max_depth=4):
 
 # main loop
 def main():
+    depth = 4 # 変えるな危険，バグのもと
     state = State()
     state.set_board_list([0,0,0,0,0,0,0,0,0])
     view_state(state)
+
+    dt_now = datetime.datetime.now()
+    f = open("statelog.txt", "a")
+    f.write(f"\n{dt_now}\n")
+    f.close()
+
     while True:
         source, dist, size = map(int, input("plase input operator:").split())
 
+        with open("statelog.txt", "a") as f:
+            f.write(f"{source} {dist} {size}\n")
+
         operator = Operator(-1, source, dist, size)
         state = move(state, operator)
+        print(state.get_board_list())
         view_state(state)
         if is_win(state):
             print("player win!")
             break
 
-        tree = make_tree(state, Operator(-1, source, dist, size))
+        tree = make_tree(state, Operator(-1, source, dist, size), max_depth=depth)
         calc_child_eval(tree)
-        best = min_max_algorithm(tree)
+        best = min_max_algorithm(tree, depth=depth)
+
+        _, _source, _dist, _size = best.get_all_param()
+        with open("statelog.txt", "a") as f:
+            f.write(f"{_source} {_dist} {_size}\n")
+
         state = move(state, best)
+        print(state.get_board_list())
         view_state(state)
         if is_win(state):
             print("cpu win!")
